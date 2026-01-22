@@ -22,6 +22,11 @@ class MovieError extends MovieState {
   MovieError(this.message);
 }
 
+class SearchMovies extends MovieEvent {
+  final String query;
+  SearchMovies(this.query);
+}
+
 // Bloc - business logic component
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final ApiService apiService;
@@ -30,7 +35,19 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
     on<FetchTrendingMovies>((event, emit) async {
       emit(MovieLoading());
       try {
-        final movies = await apiService.searchMovies('Batman'); //as a start
+        final movies = await apiService.searchMovies('Heart'); //as a start
+        emit(MovieLoaded(movies));
+      } catch (e) {
+        emit(MovieError(e.toString()));
+      }
+    });
+
+    on<SearchMovies>((event, emit) async {
+      if (event.query.isEmpty) return;
+      
+      emit(MovieLoading());
+      try {
+        final movies = await apiService.searchMovies(event.query);
         emit(MovieLoaded(movies));
       } catch (e) {
         emit(MovieError(e.toString()));

@@ -25,7 +25,13 @@ class DatabaseService {
             title TEXT,
             year TEXT,
             poster TEXT,
-            plot TEXT
+            plot TEXT,
+            genre TEXT,
+            director TEXT,
+            actors TEXT,
+            runtime TEXT,
+            imdbRating TEXT,
+            released TEXT
           )
         ''');
       },
@@ -42,6 +48,12 @@ class DatabaseService {
         'year': movie.year,
         'poster': movie.poster,
         'plot': movie.plot,
+        'genre': movie.genre,
+        'director': movie.director,
+        'actors': movie.actors,
+        'runtime': movie.runtime,
+        'imdbRating': movie.imdbRating,
+        'released': movie.released,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );

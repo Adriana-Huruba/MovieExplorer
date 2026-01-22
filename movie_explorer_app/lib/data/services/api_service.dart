@@ -29,4 +29,9 @@ class ApiService {
       throw Exception('Network error: $e');
     }
   }
+
+  Future<Movie> fetchMovieDetails(String imdbID) async {
+    final response = await _dio.get('https://www.omdbapi.com/?apikey=$_apiKey&i=$imdbID');
+    return Movie.fromJson(response.data);
+  }
 }

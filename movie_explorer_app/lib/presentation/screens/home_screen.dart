@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_explorer_app/presentation/screens/favorites_screen.dart';
+import 'package:movie_explorer_app/presentation/screens/search_screen.dart';
 import '../../logic/bloc/movie_bloc.dart';
 import '../../injection_container.dart';
 import 'movie_detail_screen.dart';
@@ -17,6 +18,15 @@ class HomeScreen extends StatelessWidget {
           title: const Text('Movie Explorer'),
           centerTitle: true,
           actions: [
+            IconButton(
+      icon: const Icon(Icons.search),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SearchScreen()),
+        );
+      },
+    ),
     IconButton(
       icon: const Icon(Icons.favorite),
       onPressed: () {
