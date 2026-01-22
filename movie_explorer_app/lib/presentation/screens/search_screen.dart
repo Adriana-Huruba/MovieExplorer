@@ -19,9 +19,7 @@ class SearchScreen extends StatelessWidget {
           ),
           style: const TextStyle(color: Colors.white),
           onChanged: (query) {
-            if (query.length > 2) {
-              context.read<MovieBloc>().add(SearchMovies(query)); // Trimite evenimentul către BLoC
-            }
+            context.read<MovieBloc>().add(SearchMovies(query));
           },
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stream_transform/stream_transform.dart'; // For debouncing
 import '../../data/models/movie.dart';
 import '../../data/services/api_service.dart';
 
@@ -22,6 +23,10 @@ class MovieError extends MovieState {
   MovieError(this.message);
 }
 
+EventTransformer<T> debounce<T>(Duration duration) {
+  return (events, mapper) => events.debounce(duration).switchMap(mapper);
+}
+
 class SearchMovies extends MovieEvent {
   final String query;
   SearchMovies(this.query);
@@ -42,16 +47,22 @@ class MovieBloc extends Bloc<MovieEvent, MovieState> {
       }
     });
 
-    on<SearchMovies>((event, emit) async {
-      if (event.query.isEmpty) return;
-      
-      emit(MovieLoading());
-      try {
-        final movies = await apiService.searchMovies(event.query);
-        emit(MovieLoaded(movies));
-      } catch (e) {
-        emit(MovieError(e.toString()));
-      }
-    });
+    on<SearchMovies>(
+      (event, emit) async {
+        if (event.query.isEmpty) {
+          return emit(MovieInitial());
+        }
+        
+        emit(MovieLoading());
+        try {
+          final movies = await apiService.searchMovies(event.query);
+          emit(MovieLoaded(movies));
+        } catch (e) {
+          emit(MovieError(e.toString()));
+        }
+      },
+
+      transformer: debounce(const Duration(milliseconds: 500)),
+    );
   }
 }
